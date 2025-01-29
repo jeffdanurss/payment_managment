@@ -1,20 +1,20 @@
-# Base image
+# Use an official Node.js base image
 FROM node:16
 
-# Establecer directorio de trabajo dentro del contenedor
+# Create a working directory for your application
 WORKDIR /usr/src/app
 
-# Copiar archivos de proyecto
+# Copy your project files into the container
 COPY package*.json ./
 
-# Instalar dependencias
+# Install the application dependencies
 RUN npm install
 
-# Copiar el resto del código fuente
+# Copy the rest of the project files into the container
 COPY . .
 
-# Exponer el puerto del servicio
+# Expose the port your application will be running on
 EXPOSE 3001
 
-# Definir el comando de inicio
-CMD ["node", "src/app.js"]
+# Command to start your application
+CMD ["node", "app.js"]
