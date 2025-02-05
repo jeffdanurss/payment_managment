@@ -10,7 +10,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use('/payments', paymentRoutes);
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3010;
 app.listen(PORT, () => {
   console.log(`Servicio de pagos corriendo en el puerto ${PORT}`);
 });
