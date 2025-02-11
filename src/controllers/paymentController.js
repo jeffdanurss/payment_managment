@@ -26,7 +26,7 @@ const processPayment = async (req, res) => {
     console.log('Respuesta de PayPal:', order.result);
     const orderId = order.result.id;
 
-    // Guardar la transacción en MySQL
+    /*// Guardar la transacción en MySQL
     db.query(
       'INSERT INTO transactions (orderId, amount, currency, status) VALUES (?, ?, ?, ?)',
       [orderId, amount, currency, 'PENDING'],
@@ -50,7 +50,37 @@ const processPayment = async (req, res) => {
         // Responder al cliente con el orderId
         res.status(201).json({ orderId });
       }
-    );
+    );*/
+    // 
+
+  //const orderId = order.result.id;
+  const email = req.body.email;  
+// save mysql transactions
+  db.query(
+    'INSERT INTO transactions (orderId, amount, currency, status) VALUES (?, ?, ?, ?)',
+    [orderId, amount, currency, 'PENDING'],
+   async (err) => {
+      if (err) {
+       console.error('Error guardando transacción:', err);
+        return res.status(500).json({ error: 'Error al guardar la transacción' });
+      }
+
+    // show id
+     try {
+        const { channel } = await connectRabbitMQ();
+        const message = JSON.stringify({ orderId, amount, currency, email }); 
+        channel.sendToQueue('notifications', Buffer.from(message));
+        console.log('Message sent to RabbitMQ:', message);
+      } catch (rabbitError) {
+        console.error('Error publishing to RabbitMQ:', rabbitError.message);
+        return res.status(500).json({ error: 'Error al publicar en RabbitMQ' });
+      }
+
+    // Respond to client
+      res.status(201).json({ orderId });
+    }
+  );
+
   } catch (error) {
     console.error('Error en el pago:', error);
     res.status(500).json({ error: 'Error al procesar el pago' });
