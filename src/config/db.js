@@ -16,5 +16,24 @@ connection.connect(err => {
   }
   console.log('Conectado a la base de datos MySQL');
 });
+const createTableQuery = `
+CREATE TABLE IF NOT EXISTS transactions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  orderId VARCHAR(255) NOT NULL,
+  amount DECIMAL(10, 2) NOT NULL,
+  currency VARCHAR(10) NOT NULL,
+  status VARCHAR(50) NOT NULL,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+`;
+console.log('Intentando crear la tabla `transactions`...');
+connection.query(createTableQuery, (err) => {
+if (err) {
+  console.error('Error creando la tabla `transactions`:', err.message);
+} else {
+  console.log('Tabla `transactions` creada o ya existe');
+}
+});
+
 
 module.exports = connection;
