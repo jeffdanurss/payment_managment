@@ -12,7 +12,7 @@ app.use('/payments', paymentRoutes);
 
 const PORT = process.env.PORT || 3010;
 app.listen(PORT, () => {
-  console.log(`Servicio de pagos corriendo en el puerto ${PORT}`);
+  console.log(`Server port run on port ${PORT}`);
 });
 
 module.exports = app;
